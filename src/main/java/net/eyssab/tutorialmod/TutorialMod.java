@@ -1,5 +1,6 @@
 package net.eyssab.tutorialmod;
 
+import net.eyssab.tutorialmod.block.ModBlocks;
 import net.eyssab.tutorialmod.item.ModItemGroups;
 import net.eyssab.tutorialmod.item.ModItems;
 import net.fabricmc.api.ModInitializer;
@@ -15,5 +16,6 @@ public class TutorialMod implements ModInitializer {
 	public void onInitialize() {
 		ModItems.registerModItems();
 		ModItemGroups.registerItemGroups();
+		ModBlocks.registerModBlocks();
 	}
 }

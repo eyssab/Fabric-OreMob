@@ -27,6 +27,15 @@ public class ModItemGroups {
                         entries.add(ModBlocks.DEEPSLATE_RUBY_ORE);
                         entries.add(ModBlocks.NETHER_RUBY_ORE);
                         entries.add(ModBlocks.END_STONE_RUBY_ORE);
+                        entries.add(ModBlocks.RUBY_TRAPDOOR);
+                        entries.add(ModBlocks.RUBY_BUTTON);
+                        entries.add(ModBlocks.RUBY_PRESSURE_PLATE);
+                        entries.add(ModBlocks.RUBY_SLAB);
+                        entries.add(ModBlocks.RUBY_STAIRS);
+                        entries.add(ModBlocks.RUBY_DOOR);
+                        entries.add(ModBlocks.RUBY_WALL);
+                        entries.add(ModBlocks.RUBY_FENCE_GATE);
+                        entries.add(ModBlocks.RUBY_FENCE);
                     }).build());
     public static void registerItemGroups() {
         TutorialMod.LOGGER.info("Registering Item Groups for " + TutorialMod.MOD_ID);

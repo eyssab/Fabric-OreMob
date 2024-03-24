@@ -4,9 +4,7 @@ import net.eyssab.tutorialmod.TutorialMod;
 import net.eyssab.tutorialmod.block.custom.SoundBlock;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ExperienceDroppingBlock;
+import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -27,9 +25,26 @@ public class ModBlocks {
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5), FabricBlockSettings.copyOf(Blocks.NETHERRACK).strength(1.5f)));
     public static final Block END_STONE_RUBY_ORE = registerBlock("end_stone_ruby_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(4, 7), FabricBlockSettings.copyOf(Blocks.END_STONE).strength(4f)));
-
     public static final Block SOUND_BLOCK = registerBlock("sound_block",
             new SoundBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_STAIRS = registerBlock("ruby_stairs",
+            new StairsBlock(ModBlocks.RUBY_BLOCK.getDefaultState(), FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_SLAB = registerBlock("ruby_slab",
+            new SlabBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_BUTTON = registerBlock("ruby_button",
+            new ButtonBlock(BlockSetType.IRON, 10, FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_WALL = registerBlock("ruby_wall",
+            new WallBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_PRESSURE_PLATE = registerBlock("ruby_pressure_plate",
+            new PressurePlateBlock(BlockSetType.IRON, FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_FENCE = registerBlock("ruby_fence",
+            new FenceBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_FENCE_GATE = registerBlock("ruby_fence_gate",
+            new FenceGateBlock(WoodType.ACACIA, FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD)));
+    public static final Block RUBY_DOOR = registerBlock("ruby_door",
+            new DoorBlock(BlockSetType.IRON, FabricBlockSettings.copyOf(Blocks.IRON_DOOR).nonOpaque()));
+    public static final Block RUBY_TRAPDOOR = registerBlock("ruby_trapdoor",
+            new TrapdoorBlock(BlockSetType.IRON, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

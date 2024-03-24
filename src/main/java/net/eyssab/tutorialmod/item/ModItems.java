@@ -2,6 +2,7 @@ package net.eyssab.tutorialmod.item;
 
 import net.eyssab.tutorialmod.TutorialMod;
 import net.eyssab.tutorialmod.item.custom.MetalDetectorItem;
+import net.eyssab.tutorialmod.item.custom.VoidWandItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -22,6 +23,10 @@ public class ModItems {
     public static final Item RAW_RUBY = registerItem("raw_ruby", new Item(new FabricItemSettings()));
 
     public static final Item METAL_DETECTOR = registerItem("metal_detector", new MetalDetectorItem(new FabricItemSettings().maxDamage(64)));
+    public static final Item RUBY_STAFF = registerItem("ruby_staff",
+            new Item(new FabricItemSettings().maxCount(1)));
+    public static final Item VOID_WAND = registerItem("void_wand",
+            new VoidWandItem(new FabricItemSettings().maxCount(1)));
 
     private static void addItemstoIngredientItemGroup(FabricItemGroupEntries entries) {
         entries.add(RUBY);

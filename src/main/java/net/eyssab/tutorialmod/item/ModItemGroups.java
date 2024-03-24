@@ -36,6 +36,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUBY_WALL);
                         entries.add(ModBlocks.RUBY_FENCE_GATE);
                         entries.add(ModBlocks.RUBY_FENCE);
+                        entries.add(ModItems.RUBY_STAFF);
+                        entries.add(ModItems.VOID_WAND);
                     }).build());
     public static void registerItemGroups() {
         TutorialMod.LOGGER.info("Registering Item Groups for " + TutorialMod.MOD_ID);

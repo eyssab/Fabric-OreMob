@@ -3,6 +3,8 @@
   "item.tutorialmod.raw_ruby": "Raw Ruby",
   "item.tutorialmod.tomato": "Tomato",
   "item.tutorialmod.coal_briquette": "Coal of Briquette",
+  "item.tutorialmod.ruby_staff": "Ruby Staff",
+  "item.tutorialmod.void_wand": "Void Wand",
   "tooltip.tutorialmod.metal_detector.tooltip": "Finds valuables underground",
 
   "block.tutorialmod.ruby_block": "Block of Ruby",

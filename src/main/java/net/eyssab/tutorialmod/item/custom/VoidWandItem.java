@@ -19,7 +19,6 @@ public class VoidWandItem extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         if(!context.getWorld().isClient()) {
             BlockPos positionClicked = context.getBlockPos();
-            PlayerEntity player = context.getPlayer();
             World world = context.getWorld();
 
             for(int i = 0; i <= positionClicked.getY() + 64; i++){

@@ -38,6 +38,11 @@ public class ModItemGroups {
                         entries.add(ModBlocks.RUBY_FENCE);
                         entries.add(ModItems.RUBY_STAFF);
                         entries.add(ModItems.VOID_WAND);
+                        entries.add(ModItems.RUBY_PICKAXE);
+                        entries.add(ModItems.RUBY_AXE);
+                        entries.add(ModItems.RUBY_SHOVEL);
+                        entries.add(ModItems.RUBY_SWORD);
+                        entries.add(ModItems.RUBY_HOE);
                     }).build());
     public static void registerItemGroups() {
         TutorialMod.LOGGER.info("Registering Item Groups for " + TutorialMod.MOD_ID);

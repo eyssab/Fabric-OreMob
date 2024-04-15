@@ -2,6 +2,7 @@ package net.eyssab.tutorialmod.entity;
 
 import net.eyssab.tutorialmod.TutorialMod;
 import net.eyssab.tutorialmod.entity.custom.BuffedMinecartEntity;
+import net.eyssab.tutorialmod.entity.custom.OreFienEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -15,5 +16,9 @@ public class ModEntities {
             new Identifier(TutorialMod.MOD_ID, "buffed_minecart"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, BuffedMinecartEntity::new)
                     .dimensions(EntityDimensions.fixed(1f, 1f)).build());
-}
 
+    public static final EntityType<OreFienEntity> ORE_FIEN = Registry.register(Registries.ENTITY_TYPE,
+            new Identifier(TutorialMod.MOD_ID, "ore_fien"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, OreFienEntity::new)
+                    .dimensions(EntityDimensions.fixed(1f, 1f)).build());
+}

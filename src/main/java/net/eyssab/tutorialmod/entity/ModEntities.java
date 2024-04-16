@@ -19,6 +19,6 @@ public class ModEntities {
 
     public static final EntityType<OreFienEntity> ORE_FIEN = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(TutorialMod.MOD_ID, "ore_fien"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, OreFienEntity::new)
-                    .dimensions(EntityDimensions.fixed(1f, 1f)).build());
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, OreFienEntity::new).fireImmune()
+                    .dimensions(EntityDimensions.fixed(0.4f, 0.8f)).build());
 }

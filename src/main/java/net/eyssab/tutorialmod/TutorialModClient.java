@@ -11,19 +11,12 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.entity.EntityDimensions;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.Heightmap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +40,8 @@ public class TutorialModClient implements ClientModInitializer{
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.ORE_FIEN, OreFienModel::getTexturedModelData);
         FabricDefaultAttributeRegistry.register(ModEntities.ORE_FIEN, OreFienEntity.createOreFienAttributes());
 
-        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER,
-                ORE_FIEN, 100, 1, 3);
-
-        SpawnRestriction.register(ORE_FIEN, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HostileEntity::canSpawnInDark);
+        BiomeModifications.addSpawn(BiomeSelectors.all(), SpawnGroup.MONSTER, ORE_FIEN, 10, 1, 1);
+        SpawnRestriction.register(ORE_FIEN, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, OreFienEntity::canSpawn);
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             // Check if the spawned entity is a ZombieEntity

@@ -1,5 +1,7 @@
 package net.eyssab.tutorialmod.entity.custom;
 
+import net.eyssab.tutorialmod.datagen.ModBlockTagProvider;
+import net.eyssab.tutorialmod.util.ModTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -19,17 +21,25 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
+
+import static net.eyssab.tutorialmod.TutorialMod.MOD_ID;
 
 public class OreFienEntity extends VexEntity {
 
     public OreFienEntity(EntityType<? extends VexEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
 
     public static DefaultAttributeContainer.Builder createOreFienAttributes() {
         return MobEntity.createMobAttributes()
@@ -44,22 +54,18 @@ public class OreFienEntity extends VexEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(4, new ChargeTargetGoal());
         this.goalSelector.add(8, new LookAtTargetGoal());
+        this.goalSelector.add(2, new StareAtPlayerGoal(this, PlayerEntity.class, 20.0f));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 100.0f, 1.0f));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 100.0f));
         this.targetSelector.add(3, new ActiveTargetGoal<PlayerEntity>((MobEntity)this, PlayerEntity.class, false));
     }
 
-    public static boolean canSpawn(EntityType<? extends OreFienEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && canMobSpawn(type, world, spawnReason, pos, random);
+    public static boolean canSpawn(EntityType<OreFienEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && isLightLevelValidForNaturalSpawn(world, pos) && !world.isSkyVisible(pos) && pos.getY() < 50;
     }
 
-//    public static boolean canSpawn(EntityType<WolfEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-//        return world.getBlockState(pos.down()).isIn(BlockTags.ANIMALS_SPAWNABLE_ON) && WolfEntity.isLightLevelValidForNaturalSpawn(world, pos);
-//    }
-
-    public static boolean canMobSpawn(EntityType<? extends MobEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        BlockPos blockPos = pos.down();
-        return spawnReason == SpawnReason.SPAWNER || world.getBlockState(blockPos).allowsSpawning(world, blockPos, type);
+    protected static boolean isLightLevelValidForNaturalSpawn(BlockRenderView world, BlockPos pos) {
+        return world.getBaseLightLevel(pos, 0) <= 5;
     }
 
     class ChargeTargetGoal
@@ -152,6 +158,64 @@ public class OreFienEntity extends VexEntity {
                 OreFienEntity.this.getLookControl().lookAt((double)blockPos2.getX() + 0.5, (double)blockPos2.getY() + 0.5, (double)blockPos2.getZ() + 0.5, 180.0f, 20.0f);
                 break;
             }
+        }
+    }
+
+    public class StareAtPlayerGoal extends Goal {
+        private final MobEntity mob;
+        private final LookAtEntityGoal lookAtEntityGoal;
+        private LivingEntity targetEntity;
+
+        public StareAtPlayerGoal(MobEntity mob, Class<? extends LivingEntity> targetType, float range) {
+            this.mob = mob;
+            this.lookAtEntityGoal = new LookAtEntityGoal(mob, targetType, range);
+            this.setControls(EnumSet.of(Goal.Control.LOOK));
+        }
+
+        @Override
+        public boolean canStart() {
+            return this.lookAtEntityGoal.canStart();
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return this.lookAtEntityGoal.shouldContinue();
+        }
+
+        @Override
+        public void start() {
+            this.lookAtEntityGoal.start();
+            this.targetEntity = this.mob.getTarget();
+        }
+
+        @Override
+        public void stop() {
+            this.lookAtEntityGoal.stop();
+            this.targetEntity = null;
+        }
+
+        @Override
+        public void tick() {
+            if (this.targetEntity != null && this.mob.canSee(this.targetEntity)) {
+                // Check if the player is staring
+                if (isPlayerStaringAtMob(this.mob, this.targetEntity)) {
+                    LOGGER.info("Player Looking at Mob");
+                    this.mob.setVelocity(0,0,0);
+                }
+            }
+        }
+
+        // Method to check if the player is staring at the mob
+        private boolean isPlayerStaringAtMob(MobEntity mob, LivingEntity player) {
+            Vec3d mobEyes = mob.getCameraPosVec(1.0F);
+            Vec3d playerEyes = player.getCameraPosVec(1.0F);
+            Vec3d lookVec = player.getRotationVec(1.0F);
+
+            double dotProduct = lookVec.dotProduct(mobEyes.subtract(playerEyes));
+            double distance = mobEyes.distanceTo(playerEyes);
+            double angle = Math.acos(dotProduct / distance);
+
+            return Math.toDegrees(angle) < 60; // Change the angle as desired
         }
     }
 

@@ -8,6 +8,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.VexEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -71,7 +72,7 @@ public class OreFienEntity extends VexEntity {
         @Override
         public boolean canStart() {
             LivingEntity livingEntity = OreFienEntity.this.getTarget();
-            if (livingEntity != null && livingEntity.isAlive() && !OreFienEntity.this.getMoveControl().isMoving() && OreFienEntity.this.random.nextInt(OreFienEntity.ChargeTargetGoal.toGoalTicks(7)) == 0) {
+            if (livingEntity != null && livingEntity.isAlive() && !OreFienEntity.this.getMoveControl().isMoving() && OreFienEntity.this.random.nextInt(OreFienEntity.ChargeTargetGoal.toGoalTicks(7)) == 0 && livingEntity.getArmor() > 0) {
                 return OreFienEntity.this.squaredDistanceTo(livingEntity) > 20.0;
             }
             return false;
@@ -79,20 +80,23 @@ public class OreFienEntity extends VexEntity {
 
         @Override
         public boolean shouldContinue() {
-            return true;
+            return this.targetEntity != null && this.targetEntity.isAlive() && this.targetEntity.getArmor() > 0;
         }
 
         @Override
         public void start() {
+            OreFienEntity.this.setCharging(true);
+            OreFienEntity.this.playSound(SoundEvents.BLOCK_ANVIL_FALL, 10.0f, 1.0f);
             LivingEntity livingEntity = OreFienEntity.this.getTarget();
+
+            // Check if the target is a player and if they are wearing armor
             if (livingEntity != null) {
                 Vec3d vec3d = livingEntity.getEyePos();
                 OreFienEntity.this.moveControl.moveTo(vec3d.x, vec3d.y, vec3d.z, 5.0);
             }
-            OreFienEntity.this.setCharging(true);
             this.targetEntity = OreFienEntity.this.getTarget();
-            OreFienEntity.this.playSound(SoundEvents.ENTITY_VEX_CHARGE, 1.0f, 3.0f);
         }
+
 
         @Override
         public void stop() {
@@ -118,10 +122,8 @@ public class OreFienEntity extends VexEntity {
                 if (isPlayerStaringAtMob(OreFienEntity.this, this.targetEntity)) {
                     LOGGER.info("Player Looking at Mob");
                     // If mob is not charging, stop its movement
-                    OreFienEntity.this.setInvisible(true);
                     OreFienEntity.this.setVelocity(0, 0, 0);
-                } else{
-                    OreFienEntity.this.setInvisible(false);
+                    OreFienEntity.this.playSound(SoundEvents.ENTITY_ENDERMAN_STARE, 5.0f, 3.0f);
                 }
             }
 
@@ -147,7 +149,7 @@ public class OreFienEntity extends VexEntity {
             double distance = mobEyes.distanceTo(playerEyes);
             double angle = Math.acos(dotProduct / distance);
 
-            return Math.toDegrees(angle) < 10;
+            return Math.toDegrees(angle) < 5;
         }
 
 //        private boolean isDroppedDiamondInFront() {

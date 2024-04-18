@@ -4,10 +4,17 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffectUtil;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.VexEntity;
+import net.minecraft.entity.mob.WardenBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +25,7 @@ import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.event.Vibrations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +45,8 @@ public class OreFienEntity extends VexEntity {
 
     public static DefaultAttributeContainer.Builder createOreFienAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 5f)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 45)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 4f)
                 .add(EntityAttributes.GENERIC_ARMOR, 0.5f)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1);
     }
@@ -124,6 +132,15 @@ public class OreFienEntity extends VexEntity {
                     // If mob is not charging, stop its movement
                     OreFienEntity.this.setVelocity(0, 0, 0);
                     OreFienEntity.this.playSound(SoundEvents.ENTITY_ENDERMAN_STARE, 5.0f, 3.0f);
+
+                    //apply blindness and slowness when staring
+                    World world = getWorld();
+                    if (world instanceof ServerWorld serverWorld) {
+                        StatusEffectInstance darknessEffectInstance = new StatusEffectInstance(StatusEffects.DARKNESS, 100, 2);
+                        StatusEffectInstance slownessEffectInstance = new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 2);
+                        StatusEffectUtil.addEffectToPlayersWithinDistance(serverWorld, targetEntity, targetEntity.getPos(), 50.0, darknessEffectInstance, 1000);
+                        StatusEffectUtil.addEffectToPlayersWithinDistance(serverWorld, targetEntity, targetEntity.getPos(), 50.0, slownessEffectInstance, 1000);
+                    }
                 }
             }
 

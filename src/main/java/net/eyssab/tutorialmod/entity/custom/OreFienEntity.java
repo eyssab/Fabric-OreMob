@@ -11,20 +11,21 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.VexEntity;
 import net.minecraft.entity.mob.WardenBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.*;
 import net.minecraft.world.event.Vibrations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class OreFienEntity extends VexEntity {
     public static DefaultAttributeContainer.Builder createOreFienAttributes() {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 45)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 4f)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 3f)
                 .add(EntityAttributes.GENERIC_ARMOR, 0.5f)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1);
     }
@@ -68,6 +69,69 @@ public class OreFienEntity extends VexEntity {
     protected static boolean isLightLevelValidForNaturalSpawn(BlockRenderView world, BlockPos pos) {
         return world.getBaseLightLevel(pos, 0) <= 5;
     }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_WARDEN_AMBIENT;
+    }
+
+    @Override
+    public boolean canGather(ItemStack stack) {
+        return super.canGather(stack);
+    }
+
+    float movementPauseTicks = 0f;
+    @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (!this.getWorld().isClient()) {
+            // Check if the player is holding a diamond
+            if (player.getStackInHand(hand).getItem() == Items.DIAMOND) {
+                // Stop the mob's movement for 5 seconds (100 ticks)
+                this.setVelocity(-1,-1,-1);
+                this.movementPauseTicks = 100;
+
+                // Add diamond to the mob's main hand
+                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND));
+
+                // Play a sound effect indicating the action
+                this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundVolume(), this.getSoundPitch());
+
+                // Consume the diamond from the player's hand
+                player.getStackInHand(hand).decrement(1);
+
+                return ActionResult.SUCCESS;
+            }
+        }
+        // Proceed with the default interaction behavior
+        return super.interactMob(player, hand);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.movementPauseTicks > 0) {
+            this.movementPauseTicks--;
+            this.setVelocity(0, 0, 0);
+            if (this.movementPauseTicks == 1) {
+                // Perform additional actions when movementPauseTicks reaches 1
+                // For example:
+                // Play random particle effect
+                this.getWorld().addParticle(ParticleTypes.ELECTRIC_SPARK, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
+
+                // Play random sound effect
+                this.playSound(SoundEvents.ENTITY_GHAST_DEATH, 1.0f, 1.0f);
+
+                // Drop specific item
+                this.dropItem(Items.DIAMOND_SWORD);
+
+                // Die
+                this.kill();
+            }
+        }
+    }
+
+
 
     class ChargeTargetGoal
             extends Goal {
@@ -97,7 +161,7 @@ public class OreFienEntity extends VexEntity {
             OreFienEntity.this.playSound(SoundEvents.BLOCK_ANVIL_FALL, 10.0f, 1.0f);
             LivingEntity livingEntity = OreFienEntity.this.getTarget();
 
-            // Check if the target is a player and if they are wearing armor
+            // Check if the target is a player
             if (livingEntity != null) {
                 Vec3d vec3d = livingEntity.getEyePos();
                 OreFienEntity.this.moveControl.moveTo(vec3d.x, vec3d.y, vec3d.z, 5.0);
@@ -168,15 +232,6 @@ public class OreFienEntity extends VexEntity {
 
             return Math.toDegrees(angle) < 5;
         }
-
-//        private boolean isDroppedDiamondInFront() {
-//            Vec3d entityLook = OreFienEntity.this.getRotationVec(1.0F); // Get the entity's look vector
-//            Vec3d entityPos = OreFienEntity.this.getPos(); // Get the entity's position
-//            Vec3d diamondPos = entityPos.add(entityLook.multiply(3.0)); // Calculate a position 3 blocks in front of the entity
-//            // Check if there's a dropped diamond within a certain range in front of the entity
-//            List<Entity> diamondList = OreFienEntity.this.getWorld().getEntitiesByClass(ItemEntity.class, new Box(diamondPos.x - 1, diamondPos.y - 1, diamondPos.z - 1, diamondPos.x + 1, diamondPos.y + 1, diamondPos.z + 1), entity -> entity == Items.DIAMOND);
-//            return !diamondList.isEmpty();
-//        }
     }
 
     class LookAtTargetGoal

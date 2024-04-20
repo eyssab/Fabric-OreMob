@@ -11,4 +11,4 @@ Follow Fabric setup and clone project into code editor to test and play
 
 ## OreFein Mob GIF
 
-![GIF](readmeassets/orefein.gif)
+![GIF](orefein.gif)

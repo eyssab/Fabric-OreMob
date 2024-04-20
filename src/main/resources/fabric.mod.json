@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "tutorialmod",
+	"id": "scariercaves",
 	"version": "${version}",
-	"name": "Tutorial Mod",
-	"description": "This is tutorial mode followed for learning Fabric!",
+	"name": "Scarier Caves Mod",
+	"description": "Mod for scarier caves with new mob and items!",
 	"authors": [
 		"Me!"
 	],
@@ -12,21 +12,21 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "MIT",
-	"icon": "assets/tutorial-mod/icon.png",
+	"icon": "assets/scariercaves/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.eyssab.tutorialmod.TutorialMod"
+			"net.eyssab.scariercaves.ScarierCaves"
 		],
 		"client": [
-			"net.eyssab.tutorialmod.TutorialModClient"
+			"net.eyssab.scariercaves.ScarierCavesClient"
 		],
 		"fabric-datagen": [
-			"net.eyssab.tutorialmod.TutorialModDataGenerator"
+			"net.eyssab.scariercaves.ScarierCavesDataGenerator"
 		]
 	},
 	"mixins": [
-		"tutorial-mod.mixins.json"
+		"scarier-caves.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.7",

@@ -1,0 +1,42 @@
+{
+  "item.scariercaves.ruby": "Ruby",
+  "item.scariercaves.raw_ruby": "Raw Ruby",
+  "item.scariercaves.tomato": "Tomato",
+  "item.scariercaves.coal_briquette": "Coal of Briquette",
+  "item.scariercaves.ruby_staff": "Ruby Staff",
+  "item.scariercaves.void_wand": "Void Wand",
+  "item.scariercaves.elytra_shard": "Elytra Shard",
+  "item.scariercaves.salvaged_elytra": "Salvaged Elytra",
+  "tooltip.scariercaves.metal_detector.tooltip": "Finds valuables underground",
+  "tooltip.scariercaves.salvaged_elytra.tooltip": "Fly!",
+
+  "block.scariercaves.ruby_block": "Block of Ruby",
+  "block.scariercaves.raw_ruby_block": "Block of Raw Ruby",
+
+  "item.scariercaves.ruby_pickaxe": "Ruby Pickaxe",
+  "item.scariercaves.ruby_axe": "Ruby Axe",
+  "item.scariercaves.ruby_shovel": "Ruby Shovel",
+  "item.scariercaves.ruby_sword": "Ruby Sword",
+  "item.scariercaves.ruby_hoe": "Ruby Hoe",
+
+  "block.scariercaves.ruby_ore": "Ruby Ore",
+  "item.scariercaves.metal_detector": "Metal Detector",
+  "block.scariercaves.deepslate_ruby_ore": "Deepslate Ruby Ore",
+  "block.scariercaves.sound_block": "Sound Block",
+  "block.scariercaves.nether_ruby_ore": "Nether Ruby Ore",
+  "block.scariercaves.end_stone_ruby_ore": "End Stone Ruby Ore",
+
+  "block.scariercaves.ruby_stairs": "Ruby Stairs",
+  "block.scariercaves.ruby_slab": "Ruby Slab",
+  "block.scariercaves.ruby_button": "Ruby Button",
+  "block.scariercaves.ruby_pressure_plate": "Ruby Pressure Plate",
+  "block.scariercaves.ruby_fence": "Ruby Fence",
+  "block.scariercaves.ruby_fence_gate": "Ruby Fence Gate",
+  "block.scariercaves.ruby_wall": "Ruby Wall",
+  "block.scariercaves.ruby_door": "Ruby Door",
+  "block.scariercaves.ruby_trapdoor": "Ruby Trapdoor",
+
+  "entity.scariercaves.ore_fien": "Ore Fien",
+
+  "itemgroup.ruby": "Ruby Tutorial Group"
+}
